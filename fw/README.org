@@ -1,0 +1,6 @@
+* Firmware for the ESP8266 board
+
+- the project uses PlatformIO as configuration/build tool
+- copy include/wifi.h.example to include/wifi.h and set your WPA SSID and password
+- when you write the firmware you also need to copy the data partition.
+  If you don't change the data/ folder it is required only once.

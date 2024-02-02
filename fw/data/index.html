@@ -1,0 +1,213 @@
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+
+<head>
+  <title>3x3 Matrix Switch</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <style type="text/css">
+    .wrapper {
+      margin: 0 auto;
+      width: 960px;
+    }
+
+    .matrix_switch {
+      text-align: center;
+    }
+
+    table {
+      width: 300px;
+      margin: 0 auto;
+    }
+
+    tr, th {
+      text-align: center;
+      padding-bottom: 10px;
+    }
+
+    br {
+      margin: 1px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrapper">
+    <h1 style="text-align: center;">3x3 Matrix switch</h1>
+    <div id="show_important_message" style="color: red; text-align: center; min-height:15px; max-height:15px;"></div>
+    <div class="matrix_switch">
+      <p><h3>choose connections between each input port and output port</h3></p>
+      <table class="switch_tables">
+        <tr>
+          <th>Input</th>
+          <th>Output</th>
+        </tr>
+        <tr>
+          <th id="input_1" style="text-align: left;">1</th>
+          <th>
+            <select id="output_1">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+            </select>
+          </th>
+        </tr>
+        <tr>
+          <th id="input_2" style="text-align: left;">2</th>
+          <th>
+            <select id="output_2">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+            </select>
+          </th>
+        </tr>
+        <tr>
+          <th id="input_3" style="text-align: left;">3</th>
+          <th>
+            <select id="output_3">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+            </select>
+          </th>
+        </tr>
+      </table>
+      <br>
+      <button id="set_ports" onclick="setPorts(0)">Set</button>
+      <button id="save_ports" onclick="setPorts(1)">Save</button>
+      <button id="get_ports" onclick="getPorts()">Refresh</button>
+      <br /><br />
+      <p><h3>choose the input/output name (15 characters maximum)</h3></p>
+      <table class="name_tables">
+        <tr>
+          <th>Port</th>
+          <th>Input</th>
+          <th>Output</th>
+        </tr>
+        <tr>
+          <th>1</th>
+          <th>
+            <input type="text" id="input_1_name" maxlength="15" value="1" width="17">
+          </th>
+          <th>
+            <input type="text" id="output_1_name" maxlength="15" value="1" width="17">
+          </th>
+        </tr>
+        <tr>
+          <th>2</th>
+          <th>
+            <input type="text" id="input_2_name" maxlength="15" value="2" width="17">
+          </th>
+          <th>
+            <input type="text" id="output_2_name" maxlength="15" value="2" width="17">
+          </th>
+        </tr>
+        <tr>
+          <th>3</th>
+          <th>
+            <input type="text" id="input_3_name" maxlength="15" value="3" width="17">
+          </th>
+          <th>
+            <input type="text" id="output_3_name" maxlength="15" value="3" width="17">
+          </th>
+        </tr>
+      </table>
+      <br>
+      <button id="save_ports" onclick="saveName()">Save</button>
+      </div>
+    </div>
+</body>
+<script>
+
+function refresh_data() {
+    getName();
+    getPorts();
+  }
+  refresh_data();
+
+  // Call a function repetatively with N seconds interval
+  // var dataRefreshId = null;
+  // dataRefreshId = setInterval(function () {
+  //   getPorts();
+  // }, 10000);
+
+  function getPorts() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+        var data = JSON.parse(this.responseText);
+        document.getElementById("output_1").options[data.in1-1].selected=true;
+        document.getElementById("output_2").options[data.in2-1].selected=true;
+        document.getElementById("output_3").options[data.in3-1].selected=true;
+      }
+    }
+    xhttp.open("GET", "api/getPorts", true);
+    xhttp.send();
+  }
+
+ function setPorts(save) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+        document.getElementById("show_important_message").innerHTML = "";
+        getPorts();
+      } else if (this.readyState == 4 && this.status == 400) {
+        document.getElementById("show_important_message").innerHTML = this.responseText;
+        //alert(this.responseText);
+      }
+    };
+    xhttp.open("GET", "api/setRoutes?in1=" + document.getElementById("output_1").value + "&in2=" + document.getElementById("output_2").value + "&in3=" + document.getElementById("output_3").value + "&save=" + save, true);
+    xhttp.send();
+  }
+
+  function saveName() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+        document.getElementById("show_important_message").innerHTML = "";
+        getPorts();
+      } else if (this.readyState == 4 && this.status == 400) {
+        document.getElementById("show_important_message").innerHTML = this.responseText;
+        //alert(this.responseText);
+      }
+    };
+    xhttp.open("GET", "api/setName?in1=" + document.getElementById("input_1_name").value + "&in2=" + document.getElementById("input_2_name").value + "&in3=" + document.getElementById("input_3_name").value +
+    "&out1=" + document.getElementById("output_1_name").value + "&out2=" + document.getElementById("output_2_name").value + "&out3=" + document.getElementById("output_3_name").value, true);
+    xhttp.send();
+    refresh_data();
+  }
+  
+  function getName() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+        var data = JSON.parse(this.responseText);
+        document.getElementById("input_1_name").value = data.in1;
+        document.getElementById("input_2_name").value = data.in2;
+        document.getElementById("input_3_name").value = data.in3;
+        document.getElementById("output_1_name").value = data.out1;
+        document.getElementById("output_2_name").value = data.out2;
+        document.getElementById("output_3_name").value = data.out3;
+
+        document.getElementById("input_1").innerHTML = "1 - " + data.in1;
+        document.getElementById("input_2").innerHTML = "2 - " + data.in2;
+        document.getElementById("input_3").innerHTML = "3 - " + data.in3;
+
+        document.getElementById("output_1").options[0].innerHTML = "1 - " + data.out1;
+        document.getElementById("output_1").options[1].innerHTML = "2 - " + data.out2;
+        document.getElementById("output_1").options[2].innerHTML = "3 - " + data.out3;
+        document.getElementById("output_2").options[0].innerHTML = "1 - " + data.out1;
+        document.getElementById("output_2").options[1].innerHTML = "2 - " + data.out2;
+        document.getElementById("output_2").options[2].innerHTML = "3 - " + data.out3;
+        document.getElementById("output_3").options[0].innerHTML = "1 - " + data.out1;
+        document.getElementById("output_3").options[1].innerHTML = "2 - " + data.out2;
+        document.getElementById("output_3").options[2].innerHTML = "3 - " + data.out3;
+      }
+    }
+    xhttp.open("GET", "api/getName", true);
+    xhttp.send();
+  }
+</script>
+
+</html>

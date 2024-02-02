@@ -1,0 +1,8 @@
+#ifndef __WIFI_H_
+#define __WIFI_H_
+
+// Set WiFi credentials
+#define WIFI_SSID "WIFI-NETWORK"
+#define WIFI_PASS "WPA-KEY-KEY"
+
+#endif // __WIFI_H_

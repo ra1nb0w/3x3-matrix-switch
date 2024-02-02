@@ -1,0 +1,28 @@
+#+LANGUAGE:  en
+#+STARTUP: showeverything
+
+* 3x3 Matrix HF Switch
+
+#+begin_html
+<img src="matrix.jpg" alt="3x3 Matrix PCB and case" width="800">
+#+end_html
+
+The repository contains a project that I made in the 2020 after I was
+frustrated to switch cables between radios and loads (antennas or
+resistive load). It is a three by three matrix switch and it is mainly
+designed for HF frequencies since it is a two layer PCB. In essence,
+you can connect each of the three inputs to each of the three outputs
+using a web interface (they are mutually exclusive). The web interface
+permits to define a name for each port and it stores the connections.
+
+** Folders
+
+- *pcb*: contains the schematics, the BOM and the Gebers RS-274X;
+- *case*: contains the two part of the 3D case that I use;
+- *fw*: contains the firmware to load into the ESP8266. It uses the
+  Arduino Framework and PlatformIO to manage the project. Read the
+  README in the folder for more information.
+
+** License
+
+The project is licensed under [[https://creativecommons.org/licenses/by-nc-sa/4.0/][CC BY-NC-SA 4.0]]
